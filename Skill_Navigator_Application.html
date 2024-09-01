@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillMaster Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #e74c3c;
+            --accent-color: #f39c12;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        header h1 {
+            font-weight: 300;
+            font-size: 2.5rem;
+        }
+
+        nav {
+            background-color: white;
+            box-shadow: var(--card-shadow);
+        }
+
+        nav ul {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            padding: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li:hover, nav ul li.active {
+            background-color: rgba(126, 87, 194, 0.1);
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5E35B1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .batch-card {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .batch-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        #performanceChart {
+            width: 100%;
+            height: 300px;
+        }
+
+        .report-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .report-buttons button {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>SkillMaster Pro</h1>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li class="active" data-view="form">Candidate Form</li>
+                <li data-view="dashboard">Dashboard</li>
+                <li data-view="reports">Reports</li>
+                <li data-view="analysis">Analysis</li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <section id="form" class="card">
+                <h2>Candidate Information</h2>
+                <form id="candidateForm">
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email ID</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="degree">Degree</label>
+                            <input type="text" id="degree" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialization">Specialization</label>
+                            <input type="text" id="specialization" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="certifications">Certifications</label>
+                            <input type="text" id="certifications" placeholder="AWS, Azure, NPTEL, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="internships">Internship Details</label>
+                            <input type="text" id="internships">
+                        </div>
+                        <div class="form-group">
+                            <label for="courses">Courses Completed</label>
+                            <input type="text" id="courses" placeholder="Udemy, Coursera, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedin">LinkedIn Profile</label>
+                            <input type="url" id="linkedin">
+                        </div>
+                        <div class="form-group">
+                            <label for="github">GitHub Profile</label>
+                            <input type="url" id="github">
+                        </div>
+                        <div class="form-group">
+                            <label for="languages">Programming Languages</label>
+                            <input type="text" id="languages">
+                        </div>
+                        <div class="form-group">
+                            <label for="certificates">Upload Certificates</label>
+                            <input type="file" id="certificates" multiple>
+                        </div>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+
+            <section id="dashboard" class="card" style="display: none;">
+                <h2>Dashboard</h2>
+                <div class="grid">
+                    <div class="batch-card" style="background-color: rgba(126, 87, 194, 0.1);">
+                        <h3>Java Batch</h3>
+                        <p id="javaBatchCount">0 candidates</p>
+                    </div>
+                    <div class="batch-card" style="background-color: rgba(76, 175, 80, 0.1);">
+                        <h3>.NET Batch</h3>
+                        <p id="dotnetBatchCount">0 candidates</p>
+                    </div>
+                    <div class="batch-card" style="background-color: rgba(255, 87, 34, 0.1);">
+                        <h3>Data Engineering Batch</h3>
+                        <p id="dataBatchCount">0 candidates</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Batch Performance</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </section>
+
+            <section id="reports" class="card" style="display: none;">
+                <h2>Reports</h2>
+                <div class="report-buttons">
+                    <button onclick="generateReport('individual')">Individual Candidate Report</button>
+                    <button onclick="generateReport('batchWise')">Batch-wise Score Card</button>
+                    <button onclick="generateReport('collegeWise')">College-wise Score Card</button>
+                    <button onclick="generateReport('topperList')">Topper List</button>
+                </div>
+            </section>
+
+            <section id="analysis" class="card" style="display: none;">
+                <h2>Analysis</h2>
+                <div id="analysisContent">
+                    <p>Detailed analysis will be displayed here.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SkillMaster Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let batchAllocation = {
+            java: 0,
+            dotnet: 0,
+            dataEngineering: 0
+        };
+
+        // Navigation
+        document.querySelectorAll('nav ul li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('nav ul li').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                showSection(this.dataset.view);
+            });
+        });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('main section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Form submission
+        document.getElementById('candidateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const candidate = Object.fromEntries(formData.entries());
+            allocateBatch(candidate);
+            updateDashboard();
+            showSection('dashboard');
+            document.querySelector('nav ul li[data-view="dashboard"]').classList.add('active');
+            document.querySelector('nav ul li[data-view="form"]').classList.remove('active');
+        });
+
+        function allocateBatch(candidate) {
+            if (candidate.certifications.toLowerCase().includes('aws') || 
+                candidate.certifications.toLowerCase().includes('java')) {
+                batchAllocation.java++;
+            } else if (candidate.certifications.toLowerCase().includes('azure') || 
+                       candidate.certifications.toLowerCase().includes('.net')) {
+                batchAllocation.dotnet++;
+            } else if (candidate.certifications.toLowerCase().includes('python')) {
+                batchAllocation.dataEngineering++;
+            } else {
+                // Default allocation if no matching certification
+                batchAllocation.java++;
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById('javaBatchCount').textContent = `${batchAllocation.java} candidates`;
+            document.getElementById('dotnetBatchCount').textContent = `${batchAllocation.dotnet} candidates`;
+            document.getElementById('dataBatchCount').textContent = `${batchAllocation.dataEngineering} candidates`;
+            renderPerformanceChart();
+        }
+
+        function renderPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Java', '.NET', 'Data Engineering'],
+                    datasets: [{
+                        label: 'Average Score',
+                        data: [85, 78, 92], // Example data
+                        backgroundColor: [
+                            'rgba(126, 87, 194, 0.5)',
+                            'rgba(76, 175, 80, 0.5)',
+                            'rgba(255, 87, 34, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgb(126, 87, 194)',
+                            'rgb(76, 175, 80)',
+                            'rgb(255, 87, 34)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateReport(type) {
+            console.log(`Generating ${type} report`);
+            // Here you would typically generate and display the report
+            alert(`${type} report generated. This feature would be implemented with backend support.`);
+        }
+
+        // Initialize performance chart
+        renderPerformanceChart();
+    </script>
+</body>
+</html>
